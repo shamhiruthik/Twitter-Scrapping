@@ -16,13 +16,14 @@ This Web application basically scrapes information from Twitter. Users can scrap
  * MongoDb
  * Python Script
  
-## OVERVIEW:
+## Overview:
 
 I have Created a GUI using streamlit that contains the follwing features
  * Can enter any keyword or Hashtag to be searched,
  * select the starting date
  * select the ending date
  * Number of tweets needs to be scrapped.
+
 After scraping is done, it has the following options
  * Download data as CSV
  * Download data as JSON
