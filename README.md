@@ -6,6 +6,8 @@ Demo Video Link  :
 
 ## About
 
+This Web application basically scrapes information from Twitter. Users can scrape data by entering any keyword or hashtag respectively to the Timeline.
+
 
 
 ## Built using
