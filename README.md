@@ -17,14 +17,14 @@ Demo Video Link  :
  ## Demo Images
  
  ### 1. Web App
- 
+ ![s1](./Img/s1.png)
  
  ### 2. Request Tweet
+ ![s2](./Img/s2.png)
  
  
  ### 3. Results
- 
- 
+ ![s3](./Img/s3.png)
  
  ## Installation and Running
  
