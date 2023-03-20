@@ -6,8 +6,8 @@ import pymongo
 import time
  
 # REQUIRED VARIABLES
-client = pymongo.MongoClient("mongodb://localhost:27017/")  # To connect to MONGODB
-mydb = client["Twitter_Database"]    # To create a DATABASE
+client = pymongo.MongoClient("mongodb+srv://shamhiruthik14:C3Rs*a8%kksJvmD@twitterscraper.kbofooj.mongodb.net/?retryWrites=true&w=majority")  # To connect to MONGODB
+mydb = client["TwitterScraper"]    # To create a DATABASE
 tweets_df = pd.DataFrame()
 dfm = pd.DataFrame()
 st.write("# Twitter data scraping")
@@ -20,18 +20,22 @@ tweets_list = []
 
 # SCRAPE DATA USING TwitterSearchScraper
 if word:
-    if option=='Keyword':
-        for i,tweet in enumerate(sntwitter.TwitterSearchScraper(f'{word} + since:{start} until:{end}').get_items()):
-            if i>tweet_c:
-                break
-            tweets_list.append([ tweet.id, tweet.date,  tweet.content, tweet.lang, tweet.user.username, tweet.replyCount, tweet.retweetCount,tweet.likeCount, tweet.source, tweet.url ])
-        tweets_df = pd.DataFrame(tweets_list, columns=['ID','Date','Content', 'Language', 'Username', 'ReplyCount', 'RetweetCount', 'LikeCount','Source', 'Url'])
-    else:
-        for i,tweet in enumerate(sntwitter.TwitterHashtagScraper(f'{word} + since:{start} until:{end}').get_items()):
-            if i>tweet_c:
-                break            
-            tweets_list.append([ tweet.id, tweet.date,  tweet.content, tweet.lang, tweet.user.username, tweet.replyCount, tweet.retweetCount,tweet.likeCount, tweet.source, tweet.url ])
-        tweets_df = pd.DataFrame(tweets_list, columns=['ID','Date','Content', 'Language', 'Username', 'ReplyCount', 'RetweetCount', 'LikeCount','Source', 'Url'])
+    try:
+        if option=='Keyword':
+            for i,tweet in enumerate(sntwitter.TwitterSearchScraper(f'{word} lang:en since:{start} until:{end}').get_items()):
+                if i>tweet_c-1:
+                    break
+                tweets_list.append([ tweet.content, tweet.user.username, tweet.replyCount, tweet.retweetCount,tweet.likeCount ])
+            tweets_df = pd.DataFrame(tweets_list, columns=['Content', 'Username', 'ReplyCount', 'RetweetCount', 'LikeCount'])
+        else:
+            for i,tweet in enumerate(sntwitter.TwitterHashtagScraper(f'{word} lang:en since:{start} until:{end}').get_items()):
+                if i>tweet_c-1:
+                    break            
+                tweets_list.append([ tweet.content, tweet.user.username, tweet.replyCount, tweet.retweetCount,tweet.likeCount ])
+            tweets_df = pd.DataFrame(tweets_list, columns=['Content', 'Username', 'ReplyCount', 'RetweetCount', 'LikeCount'])
+    except Exception as e:
+        st.error(f"Too many requests, TwitterRateLimit exceeded, please try again after few hours")
+        st.stop()
 else:
     st.warning(option,' cant be empty', icon="⚠️")
 
