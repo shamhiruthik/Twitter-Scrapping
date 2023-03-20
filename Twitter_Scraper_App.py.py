@@ -6,7 +6,7 @@ import datetime
 tweets_df = pd.DataFrame()
 st.write("# Twitter data scraping")
 option = st.selectbox('How would you like the data to be searched?',('Keyword', 'Hashtag'))
-word = st.text_input('Please enter a '+option, 'Elon Musk')
+word = st.text_input('Please enter a '+option, 'LIC Policy')
 start = st.date_input("Select the start date", datetime.date(2022, 1, 1),key='d1')
 end = st.date_input("Select the end date", datetime.date(2023, 1, 1),key='d2')
 tweet_c = st.slider('How many tweets to scrape', 0, 1000, 5)
@@ -14,18 +14,23 @@ tweets_list = []
 
 # SCRAPE DATA USING TwitterSearchScraper
 if word:
-    if option=='Keyword':
-        for i,tweet in enumerate(sntwitter.TwitterSearchScraper(f'{word} + since:{start} until:{end}').get_items()):
-            if i>=tweet_c:
-                break
-            tweets_list.append([ tweet.id, tweet.date,  tweet.content, tweet.lang, tweet.user.username, tweet.replyCount, tweet.retweetCount,tweet.likeCount, tweet.source, tweet.url ])
-        tweets_df = pd.DataFrame(tweets_list, columns=['ID','Date','Content', 'Language', 'Username', 'ReplyCount', 'RetweetCount', 'LikeCount','Source', 'Url'])
-    else:
-        for i,tweet in enumerate(sntwitter.TwitterHashtagScraper(f'{word} + since:{start} until:{end}').get_items()):
-            if i>tweet_c:
-                break            
-            tweets_list.append([ tweet.id, tweet.date,  tweet.content, tweet.lang, tweet.user.username, tweet.replyCount, tweet.retweetCount,tweet.likeCount, tweet.source, tweet.url ])
-        tweets_df = pd.DataFrame(tweets_list, columns=['ID','Date','Content', 'Language', 'Username', 'ReplyCount', 'RetweetCount', 'LikeCount','Source', 'Url'])
+    try:
+        if option=='Keyword':
+            for i,tweet in enumerate(sntwitter.TwitterSearchScraper(f'{word} lang:en since:{start} until:{end}').get_items()):
+                if i>tweet_c-1:
+                    break
+                tweets_list.append([ tweet.content, tweet.user.username, tweet.replyCount, tweet.retweetCount,tweet.likeCount ])
+            tweets_df = pd.DataFrame(tweets_list, columns=['Content', 'Username', 'ReplyCount', 'RetweetCount', 'LikeCount'])
+        else:
+            for i,tweet in enumerate(sntwitter.TwitterHashtagScraper(f'{word} lang:en since:{start} until:{end}').get_items()):
+                if i>tweet_c-1:
+                    break            
+                tweets_list.append([ tweet.content, tweet.user.username, tweet.replyCount, tweet.retweetCount,tweet.likeCount ])
+            tweets_df = pd.DataFrame(tweets_list, columns=['Content', 'Username', 'ReplyCount', 'RetweetCount', 'LikeCount'])
+    except Exception as e:
+        st.error(f"Too many requests, TwitterRateLimit exceeded, please try again after few hours")
+        st.stop()
+
 else:
     st.warning(option,' cant be empty', icon="⚠️")
 
