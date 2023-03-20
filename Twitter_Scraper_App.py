@@ -4,9 +4,9 @@ import streamlit as st
 import datetime
 
 tweets_df = pd.DataFrame()
-st.write("# Twitter data scraping")
+st.write("# Sham's Twitter data scraper")
 option = st.selectbox('How would you like the data to be searched?',('Keyword', 'Hashtag'))
-word = st.text_input('Please enter a '+option, 'LIC Policy')
+word = st.text_input('Please enter a '+option, 'cryptocurrency')
 start = st.date_input("Select the start date", datetime.date(2022, 1, 1),key='d1')
 end = st.date_input("Select the end date", datetime.date(2023, 1, 1),key='d2')
 tweet_c = st.slider('How many tweets to scrape', 0, 1000, 5)
@@ -28,7 +28,7 @@ if word:
                 tweets_list.append([ tweet.content, tweet.user.username, tweet.replyCount, tweet.retweetCount,tweet.likeCount ])
             tweets_df = pd.DataFrame(tweets_list, columns=['Content', 'Username', 'ReplyCount', 'RetweetCount', 'LikeCount'])
     except Exception as e:
-        st.error(f"Too many requests, TwitterRateLimit exceeded, please try again after few hours")
+        st.error(f"TwitterRateLimit exceeded and Currently Twitter API is limiting their Access for Third-Parties, please try again after few hours")
         st.stop()
 
 else:
