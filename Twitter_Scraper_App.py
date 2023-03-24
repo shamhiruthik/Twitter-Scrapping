@@ -12,6 +12,20 @@ end = st.date_input("Select the end date", datetime.date(2023, 1, 1),key='d2')
 tweet_c = st.slider('How many tweets to scrape', 0, 1000, 5)
 tweets_list = []
 
+#SIDEBAR
+with st.sidebar:   
+    st.info('DETAILS', icon="ℹ️")
+    if option=='Keyword':
+        st.info('Keyword is '+word)
+    else:
+        st.info('Hashtag is '+word)
+    st.info('Starting Date is '+str(start))
+    st.info('End Date is '+str(end))
+    st.info("Number of Tweets "+str(tweet_c))
+    st.info("Total Tweets Scraped "+str(len(tweets_df)))
+    x=st.button('Show Tweets',key=1)
+
+
 # SCRAPE DATA USING TwitterSearchScraper
 if word:
     try:
@@ -34,18 +48,6 @@ if word:
 else:
     st.warning(option,' cant be empty', icon="⚠️")
 
-#SIDEBAR
-with st.sidebar:   
-    st.info('DETAILS', icon="ℹ️")
-    if option=='Keyword':
-        st.info('Keyword is '+word)
-    else:
-        st.info('Hashtag is '+word)
-    st.info('Starting Date is '+str(start))
-    st.info('End Date is '+str(end))
-    st.info("Number of Tweets "+str(tweet_c))
-    st.info("Total Tweets Scraped "+str(len(tweets_df)))
-    x=st.button('Show Tweets',key=1)
 
 # DOWNLOAD AS CSV
 @st.cache # IMPORTANT: Cache the conversion to prevent computation on every rerun
